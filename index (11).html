@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFORM — Gym</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --red: #e8001d;
+    --white: #f0ede8;
+    --gray: #1a1a1a;
+    --mid: #2a2a2a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #222;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--red); }
+  nav ul { list-style: none; display: flex; gap: 2.5rem; }
+  nav ul a {
+    color: #aaa; text-decoration: none;
+    font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--red); color: var(--white);
+    padding: 0.55rem 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: #c0001a; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 0 3rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80') center/cover no-repeat;
+    filter: brightness(0.2);
+    transform: scale(1.05);
+    animation: slowzoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes slowzoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(10,10,10,0.95) 40%, transparent);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 720px;
+    animation: fadeUp 0.9s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--red); color: var(--white);
+    font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+    padding: 0.35rem 1rem; margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--red);
+    display: block;
+  }
+  .hero p {
+    margin-top: 1.5rem;
+    font-size: 1.15rem; font-weight: 300; letter-spacing: 1px;
+    color: #bbb; max-width: 480px; line-height: 1.6;
+  }
+  .hero-btns {
+    margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--red); color: var(--white);
+    padding: 1rem 2.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 3px;
+    border: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  }
+  .btn-primary:hover { background: #c0001a; transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid #555; color: var(--white);
+    padding: 1rem 2.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 3px;
+    background: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--white); }
+
+  .hero-stats {
+    position: absolute; bottom: 3rem; right: 3rem; z-index: 2;
+    display: flex; gap: 3rem;
+    animation: fadeUp 1.2s ease 0.4s both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; color: var(--red); line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; letter-spacing: 2px; color: #888; text-transform: uppercase; }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--red); overflow: hidden;
+    padding: 0.7rem 0; display: flex;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 4px; color: rgba(255,255,255,0.85);
+    flex-shrink: 0;
+  }
+  .marquee-track span.dot { color: rgba(255,255,255,0.4); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* PROGRAMS */
+  .programs {
+    padding: 6rem 3rem;
+  }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1rem; font-weight: 600;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 2px; line-height: 1;
+    margin-bottom: 3rem;
+  }
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px; background: #222;
+  }
+  .program-card {
+    background: var(--gray); padding: 2.5rem;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .program-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .program-card:hover { background: var(--mid); }
+  .program-card:hover::before { transform: scaleX(1); }
+  .program-icon {
+    font-size: 2rem; margin-bottom: 1.5rem; display: block;
+  }
+  .program-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 0.75rem;
+  }
+  .program-card p { font-size: 0.95rem; color: #888; line-height: 1.6; font-weight: 300; }
+  .program-card .tag {
+    display: inline-block; margin-top: 1.5rem;
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--red); font-weight: 600;
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 6rem 3rem;
+    background: var(--gray);
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px; background: #333;
+    margin-top: 3rem;
+  }
+  .price-card {
+    background: var(--black); padding: 3rem 2.5rem;
+    position: relative; transition: transform 0.3s;
+  }
+  .price-card.featured {
+    background: var(--red);
+  }
+  .price-card.featured .price-amount,
+  .price-card.featured .price-label,
+  .price-card.featured h3,
+  .price-card.featured li,
+  .price-card.featured .price-per { color: var(--white) !important; }
+  .price-card:hover { transform: translateY(-4px); }
+  .price-badge {
+    display: inline-block; background: var(--white); color: var(--black);
+    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; margin-bottom: 1.5rem; font-weight: 700;
+  }
+  .price-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; letter-spacing: 3px; color: #aaa; margin-bottom: 1.5rem;
+  }
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.5rem; line-height: 1; color: var(--white);
+  }
+  .price-per { font-size: 0.85rem; color: #888; letter-spacing: 1px; margin-bottom: 2rem; }
+  .price-card ul { list-style: none; margin-bottom: 2.5rem; }
+  .price-card li {
+    padding: 0.6rem 0; font-size: 0.95rem; color: #bbb;
+    border-bottom: 1px solid #222; letter-spacing: 0.5px;
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .price-card.featured li { border-bottom-color: rgba(255,255,255,0.2); }
+  .price-card li::before { content: '→'; color: var(--red); font-size: 0.8rem; }
+  .price-card.featured li::before { color: var(--white); }
+  .btn-plan {
+    display: block; text-align: center;
+    padding: 0.9rem; font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 3px;
+    background: none; border: 1px solid #444; color: var(--white);
+    cursor: pointer; text-decoration: none; transition: all 0.2s;
+  }
+  .price-card.featured .btn-plan { background: var(--white); color: var(--red); border-color: var(--white); }
+  .btn-plan:hover { border-color: var(--white); background: var(--white); color: var(--black); }
+
+  /* CTA BAND */
+  .cta-band {
+    padding: 6rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+    background: var(--black);
+  }
+  .cta-band::before {
+    content: 'LIFT';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(10rem, 25vw, 20rem);
+    color: #111; letter-spacing: 10px;
+    white-space: nowrap; pointer-events: none;
+    line-height: 1;
+  }
+  .cta-band h2 {
+    position: relative; z-index: 2;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 3px; line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .cta-band h2 span { color: var(--red); }
+  .cta-band p {
+    position: relative; z-index: 2;
+    color: #888; font-size: 1.1rem; font-weight: 300;
+    letter-spacing: 1px; max-width: 480px; margin: 0 auto 2.5rem;
+  }
+  .cta-band .btn-primary { position: relative; z-index: 2; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid #1a1a1a;
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: #555; letter-spacing: 1px;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer a { color: #555; text-decoration: none; }
+  footer a:hover { color: var(--white); }
+
+  /* HAMBURGER */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--white); }
+
+  @media (max-width: 768px) {
+    nav ul, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 0 1.5rem; }
+    .hero h1 { font-size: 5rem; }
+    .hero-stats { position: static; margin-top: 3rem; justify-content: flex-start; gap: 2rem; }
+    .hero-content { padding-top: 6rem; }
+    .programs, .pricing, .cta-band { padding: 4rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">IRON<span>FORM</span></a>
+  <ul>
+    <li><a href="#">Programs</a></li>
+    <li><a href="#">Trainers</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-cta">Start Free Trial</button>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-tag">No Excuses. No Limits.</span>
+    <h1>Forge Your<em>Limits</em></h1>
+    <p>Where iron meets will. Elite training programs, world-class coaches, and a community that pushes you past every boundary you thought existed.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary">Start Free Trial</a>
+      <a href="#" class="btn-ghost">View Programs</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">12K+</div>
+      <div class="stat-label">Members</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">48</div>
+      <div class="stat-label">Programs</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Success Rate</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>STRENGTH TRAINING</span><span class="dot">✦</span>
+    <span>HIIT CLASSES</span><span class="dot">✦</span>
+    <span>POWERLIFTING</span><span class="dot">✦</span>
+    <span>YOGA & RECOVERY</span><span class="dot">✦</span>
+    <span>NUTRITION PLANS</span><span class="dot">✦</span>
+    <span>PERSONAL TRAINING</span><span class="dot">✦</span>
+    <span>STRENGTH TRAINING</span><span class="dot">✦</span>
+    <span>HIIT CLASSES</span><span class="dot">✦</span>
+    <span>POWERLIFTING</span><span class="dot">✦</span>
+    <span>YOGA & RECOVERY</span><span class="dot">✦</span>
+    <span>NUTRITION PLANS</span><span class="dot">✦</span>
+    <span>PERSONAL TRAINING</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<section class="programs">
+  <div class="section-label">What We Offer</div>
+  <h2 class="section-title">Training Programs</h2>
+  <div class="programs-grid">
+    <div class="program-card">
+      <span class="program-icon">🏋️</span>
+      <h3>Power Lifting</h3>
+      <p>Structured progressive overload with expert coaching. Build raw strength through squat, bench, and deadlift fundamentals.</p>
+      <span class="tag">→ 3-5 days/week</span>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">⚡</span>
+      <h3>HIIT & Cardio</h3>
+      <p>Burn maximum calories in minimal time. High-intensity intervals designed to shred fat and skyrocket endurance.</p>
+      <span class="tag">→ 4-6 days/week</span>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">🥊</span>
+      <h3>Combat Fitness</h3>
+      <p>Boxing-inspired conditioning that builds coordination, explosiveness, and mental toughness. No ring experience needed.</p>
+      <span class="tag">→ 3-4 days/week</span>
+    </div>
+    <div class="program-card">
+      <span class="program-icon">🧘</span>
+      <h3>Mobility & Recovery</h3>
+      <p>Optimize movement patterns, prevent injury, and enhance performance with science-backed recovery protocols.</p>
+      <span class="tag">→ Daily</span>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-label">Membership</div>
+  <h2 class="section-title">Choose Your Path</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Starter</h3>
+      <div class="price-amount">₹999</div>
+      <div class="price-per">per month</div>
+      <ul>
+        <li>Gym Floor Access</li>
+        <li>2 Group Classes/Week</li>
+        <li>Locker Room</li>
+        <li>Basic App Access</li>
+      </ul>
+      <a href="#" class="btn-plan">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-badge">Most Popular</div>
+      <h3>Elite</h3>
+      <div class="price-amount">₹2499</div>
+      <div class="price-per">per month</div>
+      <ul>
+        <li>Unlimited Access</li>
+        <li>All Group Classes</li>
+        <li>2 PT Sessions/Month</li>
+        <li>Nutrition Guidance</li>
+        <li>Priority Booking</li>
+      </ul>
+      <a href="#" class="btn-plan">Join Elite</a>
+    </div>
+    <div class="price-card">
+      <h3>Pro</h3>
+      <div class="price-amount">₹4999</div>
+      <div class="price-per">per month</div>
+      <ul>
+        <li>Everything in Elite</li>
+        <li>Unlimited PT Sessions</li>
+        <li>Custom Meal Plans</li>
+        <li>24/7 Coach Access</li>
+        <li>Body Composition Scans</li>
+      </ul>
+      <a href="#" class="btn-plan">Go Pro</a>
+    </div>
+    <div class="price-card" style="border-top: 3px solid var(--red); position: relative;">
+      <div style="position:absolute; top:-1px; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--red), #ff6a00);"></div>
+      <div class="price-badge" style="background: var(--red); color: var(--white);">Ultimate Tier</div>
+      <h3>Legend</h3>
+      <div class="price-amount">₹9999</div>
+      <div class="price-per">per month</div>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Dedicated Personal Coach</li>
+        <li>VIP Lounge Access</li>
+        <li>Weekly DNA-Based Plans</li>
+        <li>Recovery & Cryo Suite</li>
+        <li>Quarterly Performance Review</li>
+      </ul>
+      <a href="#" class="btn-plan" style="border-color: var(--red); color: var(--red);">Become a Legend</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <h2>Ready to <span>Break</span> Your Record?</h2>
+  <p>First 7 days free. No contracts. No commitments. Just results.</p>
+  <a href="#" class="btn-primary">Claim Your Free Week</a>
+</section>
+
+<footer>
+  <div>© 2026 IRONFORM. All rights reserved.</div>
+  <div style="display:flex; gap:2rem;">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+    <a href="#">Instagram</a>
+  </div>
+</footer>
+
+</body>
+</html>
